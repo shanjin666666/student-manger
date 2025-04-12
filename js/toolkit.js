@@ -67,6 +67,22 @@ class ToolkitManager {
                 this.startTimer(minutes);
             });
         }
+
+        // 绑定值日表按钮事件
+        const generateDutyBtn = document.getElementById('generateDutyBtn');
+        if (generateDutyBtn) {
+            const newBtn = generateDutyBtn.cloneNode(true);
+            generateDutyBtn.parentNode.replaceChild(newBtn, generateDutyBtn);
+            
+            newBtn.addEventListener('click', () => {
+                const dutyCount = parseInt(document.getElementById('dutyCount').value);
+                if (!dutyCount || dutyCount < 1) {
+                    showToast('请输入有效的值日生人数', 'error');
+                    return;
+                }
+                this.generateDutyRoster(dutyCount);
+            });
+        }
     }
 
     randomGroup(groupCount) {
@@ -659,9 +675,17 @@ class ToolkitManager {
 
             if (seconds <= 0) {
                 clearInterval(timer);
-                // 播放提示音
-                const audio = new Audio('assets/timer-end.mp3');
-                audio.play();
+                // 播放两声提示音
+                const playBeep = () => {
+                    const beep = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1NOTQrHxELAwr/+33wa+Rw3HLUc9J21H7Xht6T6qr2xwgEGCgrKyRAQkk6RDU3MCsoIyEbGBcTDg0KBwQCAAD9/Pv6+ff29fX09PPy8vHw7+/u7e3s6+vq6eno5+fn5uXl5OPj4uLh4eHg39/f3t7d3d3c29vb2tra2djY19fX1tbW1dXU1NTT09PS0tLR0dDQ0M/Pz8/Ozs3NzczMzMvLy8rKycnJyMjIx8fGxsbFxcXExMPDw8LCwsHBwcDAwL+/vr6+vb29vLy8u7u6urq5ubm4uLi3t7e2trW1tbS0tLOzs7KysrGxsbCwsK+vr66urq2traysrKurq6qqqampqaioqKenp6ampqWlpaSkpKOjo6KioqGhoaCgoJ+fn56enp2dnZycnJubm5qampmZmZiYmJeXl5aWlpWVlZSUlJOTk5KSkpGRkZCQkI+Pj46Ojo2NjYyMjIuLi4qKiomJiYiIiIeHh4aGhoWFhYSEhIODg4KCgoGBgYCAgH9/f35+fn19fXx8fHt7e3p6enl5eXh4eHd3d3Z2dnV1dXR0dHNzc3JycnFxcXBwcG9vb25ubm1tbWxsbGtra2pqamlpaWhoaGdnZ2ZmZmVlZWRkZGNjY2JiYmFhYWBgYF9fX15eXl1dXVxcXFtbW1paWllZWVhYWFdXV1ZWVlVVVVRUVFNTU1JSUlFRUVBQUE9PT05OTk1NTUxMTEtLS0pKSklJSUhISEdHR0ZGRkVFRURERENDQ0JCQkFBQUBAQD8/Pz4+Pj09PTw8PDs7Ozo6Ojk5OTg4ODc3NzY2NjU1NTQ0NDMzMzIyMjExMTAwMC8vLy4uLi0tLSwsLCsrKyoqKikpKSgoKCcnJyYmJiUlJSQkJCMjIyIiIiEhISAgIB8fHx4eHh0dHRwcHBsbGxoaGhkZGRgYGBcXFxYWFhUVFRQUFBMTExISEhERERAQEA8PDw4ODg0NDQwMDAsLCwoKCgkJCQgICAcHBwYGBgUFBQQEBAMDAwICAgEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                    beep.play();
+                };
+                
+                // 播放第一声
+                playBeep();
+                // 500毫秒后播放第二声
+                setTimeout(playBeep, 500);
+                
                 // 添加完成动画
                 timerDisplay.classList.add('completed');
                 // 更新提示文本
@@ -682,6 +706,205 @@ class ToolkitManager {
 
         // 显示计时器
         setTimeout(() => timerDisplay.classList.add('show'), 10);
+    }
+
+    // 添加生成值日表方法
+    generateDutyRoster(dutyCount) {
+        const students = studentManager.getAllStudents();
+        if (students.length === 0) {
+            showToast('当前没有学生数据', 'error');
+            return;
+        }
+
+        if (dutyCount > students.length) {
+            showToast('值日生人数不能大于学生总数', 'error');
+            return;
+        }
+
+        // 获取当前日期
+        const today = new Date();
+        const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        
+        // 生成本周的值日表
+        const dutyRoster = [];
+        let currentStudentIndex = 0;
+
+        // 为每天分配值日生
+        for (let i = 0; i < 7; i++) {
+            const dayStudents = [];
+            for (let j = 0; j < dutyCount; j++) {
+                dayStudents.push(students[currentStudentIndex % students.length]);
+                currentStudentIndex++;
+            }
+            dutyRoster.push({
+                day: weekDays[i],
+                students: dayStudents
+            });
+        }
+
+        // 创建值日表显示对话框
+        const dialog = document.createElement('div');
+        dialog.className = 'duty-roster-dialog';
+        dialog.innerHTML = `
+            <div class="duty-roster-content">
+                <div class="duty-roster-header">
+                    <h3><i class="fas fa-calendar-check"></i> 本周值日表</h3>
+                    <button class="modal-close close-btn" title="关闭">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="duty-roster-body">
+                    ${dutyRoster.map(day => `
+                        <div class="duty-day">
+                            <div class="day-header">
+                                <span class="day-name">${day.day}</span>
+                                <span class="student-count">${dutyCount}人</span>
+                            </div>
+                            <div class="duty-students">
+                                ${day.students.map(student => `
+                                    <div class="duty-student">
+                                        <i class="fas fa-user"></i>
+                                        <span>${student.name}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="dialog-footer">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> 打印值日表
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // 添加样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .duty-roster-dialog {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                backdrop-filter: blur(4px);
+            }
+            .duty-roster-dialog.show {
+                opacity: 1;
+            }
+            .duty-roster-content {
+                background: var(--bg-color);
+                border-radius: 16px;
+                padding: 24px;
+                width: 800px;
+                max-width: 90vw;
+                max-height: 90vh;
+                overflow-y: auto;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            }
+            .duty-roster-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .duty-roster-header h3 {
+                font-size: 1.25rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .duty-roster-body {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 16px;
+                margin-bottom: 20px;
+            }
+            .duty-day {
+                background: var(--card-bg);
+                border-radius: 12px;
+                padding: 16px;
+                border: 1px solid var(--border-color);
+            }
+            .day-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .day-name {
+                font-weight: 500;
+                color: var(--primary-color);
+            }
+            .student-count {
+                font-size: 0.85rem;
+                color: var(--text-light);
+            }
+            .duty-students {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .duty-student {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px;
+                background: var(--bg-color);
+                border-radius: 8px;
+                transition: all 0.2s ease;
+            }
+            .duty-student:hover {
+                transform: translateX(4px);
+                background: var(--primary-color);
+                color: white;
+            }
+            @media print {
+                body * {
+                    visibility: hidden;
+                }
+                .duty-roster-content, .duty-roster-content * {
+                    visibility: visible;
+                }
+                .duty-roster-content {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    box-shadow: none;
+                }
+                .dialog-footer {
+                    display: none !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 添加关闭按钮事件
+        const closeBtn = dialog.querySelector('.close-btn');
+        closeBtn.addEventListener('click', () => {
+            dialog.classList.remove('show');
+            setTimeout(() => {
+                dialog.remove();
+                style.remove();
+            }, 300);
+        });
+
+        // 显示对话框
+        document.body.appendChild(dialog);
+        setTimeout(() => dialog.classList.add('show'), 10);
     }
 }
 

@@ -253,6 +253,20 @@ function loadView(viewId) {
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="tool-card">
+                                <div class="tool-icon">
+                                    <i class="fas fa-broom"></i>
+                                </div>
+                                <div class="tool-content">
+                                    <h3>值日表</h3>
+                                    <p>生成每周值日安排表。</p>
+                                    <div class="tool-actions">
+                                        <input type="number" id="dutyCount" class="form-control" min="1" placeholder="每天值日生人数">
+                                        <button class="btn btn-primary" id="generateDutyBtn">生成值日表</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

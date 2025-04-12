@@ -1,30 +1,12 @@
 class SettingsManager {
     constructor() {
         this.rules = JSON.parse(localStorage.getItem('rules') || '[]');
-        this.theme = localStorage.getItem('theme') || 'light';
         this.bindEvents();
     }
 
     bindEvents() {
         document.addEventListener('DOMContentLoaded', () => {
-            this.initTheme();
-            this.bindThemeEvents();
             this.bindDataEvents();
-        });
-    }
-
-    initTheme() {
-        document.documentElement.setAttribute('data-theme', this.theme);
-        const themeInput = document.querySelector(`input[name="theme"][value="${this.theme}"]`);
-        if (themeInput) themeInput.checked = true;
-    }
-
-    bindThemeEvents() {
-        document.querySelectorAll('input[name="theme"]').forEach(input => {
-            input.addEventListener('change', (e) => {
-                const newTheme = e.target.value;
-                this.setTheme(newTheme);
-            });
         });
     }
 
@@ -39,13 +21,6 @@ class SettingsManager {
         document.getElementById('importDataBtn')?.addEventListener('click', () => {
             this.uploadData();
         });
-    }
-
-    setTheme(theme) {
-        this.theme = theme;
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        showToast('主题设置已更新', 'success');
     }
 
     downloadData(data) {

@@ -68,6 +68,7 @@ function loadView(viewId) {
         'points-manage': '积分管理',
         'group-manage': '分组管理',
         'statistics': '数据统计',
+        'toolkit': '工具箱',
         'settings': '系统设置'
     };
     sectionTitle.textContent = titles[viewId] || '';
@@ -199,6 +200,65 @@ function loadView(viewId) {
             renderStatistics();
             break;
             
+        case 'toolkit':
+            container.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="header-content">
+                            <div class="header-title">
+                                <h2>工具箱</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="toolkit-container">
+                        <div class="toolkit-grid">
+                            <div class="tool-card">
+                                <div class="tool-icon">
+                                    <i class="fas fa-random"></i>
+                                </div>
+                                <div class="tool-content">
+                                    <h3>随机分组</h3>
+                                    <p>快速将学生随机分配到不同的小组中。</p>
+                                    <div class="tool-actions">
+                                        <input type="number" id="groupCount" class="form-control" min="2" placeholder="分组数量">
+                                        <button class="btn btn-primary" id="startGroupBtn">开始分组</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tool-card">
+                                <div class="tool-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="tool-content">
+                                    <h3>随机点名</h3>
+                                    <p>随机选择一名或多名学生。</p>
+                                    <div class="tool-actions">
+                                        <input type="number" id="studentCount" class="form-control" min="1" placeholder="选择人数">
+                                        <button class="btn btn-primary" id="startPickBtn">开始点名</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tool-card">
+                                <div class="tool-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="tool-content">
+                                    <h3>计时器</h3>
+                                    <p>为课堂活动计时。</p>
+                                    <div class="tool-actions">
+                                        <input type="number" id="timerMinutes" class="form-control" min="1" placeholder="分钟">
+                                        <button class="btn btn-primary" id="startTimerBtn">开始计时</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+            
         case 'settings':
             container.innerHTML = `
                 <div class="card">
@@ -211,18 +271,6 @@ function loadView(viewId) {
                     </div>
                     <div class="settings-container">
                         <div class="setting-group">
-                            <h3><i class="fas fa-star"></i> 积分规则管理</h3>
-                            <div class="rules-list" id="rulesList">
-                                <!-- 积分规则将动态插入这里 -->
-                            </div>
-                            <div class="setting-actions">
-                                <button class="btn btn-primary" onclick="settingsManager.openRuleForm()">
-                                    <i class="fas fa-plus"></i> 添加规则
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
                             <h3><i class="fas fa-database"></i> 数据管理</h3>
                             <div class="setting-content">
                                 <p class="setting-description">导入或导出系统数据，包括学生信息、积分记录和分组信息。</p>
@@ -233,28 +281,6 @@ function loadView(viewId) {
                                     <button class="btn btn-outline" id="importDataBtn">
                                         <i class="fas fa-upload"></i> 导入数据
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <h3><i class="fas fa-palette"></i> 主题设置</h3>
-                            <div class="setting-content">
-                                <div class="theme-options">
-                                    <div class="theme-option">
-                                        <input type="radio" name="theme" id="themeLight" value="light" checked>
-                                        <label for="themeLight">
-                                            <div class="theme-preview light"></div>
-                                            <span>浅色主题</span>
-                                        </label>
-                                    </div>
-                                    <div class="theme-option">
-                                        <input type="radio" name="theme" id="themeDark" value="dark">
-                                        <label for="themeDark">
-                                            <div class="theme-preview dark"></div>
-                                            <span>深色主题</span>
-                                        </label>
-                                    </div>
                                 </div>
                             </div>
                         </div>

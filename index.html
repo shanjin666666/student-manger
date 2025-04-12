@@ -17,6 +17,8 @@
                     <i class="fas fa-star"></i> 积分管理系统
                 </h1>
             </div>
+            <div class="header-right">
+            </div>
         </header>
 
         <aside class="sidebar">
@@ -37,6 +39,10 @@
                     <li class="nav-item" data-view="statistics">
                         <i class="fas fa-chart-bar"></i>
                         <span>数据统计</span>
+                    </li>
+                    <li class="nav-item" data-view="toolkit">
+                        <i class="fas fa-toolbox"></i>
+                        <span>工具箱</span>
                     </li>
                     <li class="nav-item" data-view="settings">
                         <i class="fas fa-cog"></i>
@@ -61,11 +67,11 @@
                 </h3>
                 <button id="showRulesBtn" class="btn btn-sm btn-outline">规则</button>
             </div>
+            <div class="leaderboard-update-time">
+                <small>最后更新: <span id="lastUpdated"></span></small>
+            </div>
             <div class="leaderboard-body" id="leaderboardBody">
                 <!-- 排行榜内容将通过JavaScript动态生成 -->
-            </div>
-            <div class="leaderboard-footer">
-                <small>最后更新: <span id="lastUpdated"></span></small>
             </div>
         </aside>
     </div>
@@ -294,6 +300,7 @@
     <script src="js/groups.js"></script>
     <script src="js/statistics.js"></script>
     <script src="js/settings.js"></script>
+    <script src="js/toolkit.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

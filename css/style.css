@@ -12,6 +12,26 @@
     --border-color: #dfe6e9;
     --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
+    --bg-color: #fff;
+    --card-bg: #fff;
+    --hover-bg: #f8f9fa;
+    --sidebar-bg: #f8f9fa;
+    --header-bg: #fff;
+}
+
+[data-theme="dark"] {
+    --primary-color: #3498db;
+    --border-color: #2c3e50;
+    --text-color: #ecf0f1;
+    --bg-color: #1a1a1a;
+    --card-bg: #2c3e50;
+    --hover-bg: #34495e;
+    --sidebar-bg: #2c3e50;
+    --header-bg: #2c3e50;
+    --chart-text: #ecf0f1;
+    --stats-card-bg: #2c3e50;
+    --leaderboard-bg: #2c3e50;
+    --text-secondary: #bdc3c7;
 }
 
 * {
@@ -22,7 +42,7 @@
 }
 
 body {
-    background-color: #f5f7fa;
+    background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
 }
@@ -40,18 +60,19 @@ body {
 
 header {
     grid-area: header;
-    background-color: white;
+    background-color: var(--header-bg);
     box-shadow: var(--box-shadow);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
     z-index: 10;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar {
     grid-area: sidebar;
-    background-color: white;
+    background-color: var(--sidebar-bg);
     box-shadow: var(--box-shadow);
     height: calc(100vh - 70px);
     overflow-y: auto;
@@ -66,7 +87,7 @@ header {
 
 .leaderboard {
     grid-area: leaderboard;
-    background-color: white;
+    background-color: var(--card-bg);
     box-shadow: var(--box-shadow);
     height: calc(100vh - 70px);
     overflow-y: auto;
@@ -110,10 +131,10 @@ header {
     gap: 0.5rem;
 }
 
-.header-right .user-info {
+.header-right {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .username {
@@ -160,10 +181,11 @@ header {
 }
 
 .card {
-    background: #fff;
+    background-color: var(--card-bg);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    border-color: var(--border-color);
 }
 
 .card-header {
@@ -243,22 +265,22 @@ header {
 }
 
 .student-table th {
-    background: #f8f9fa;
+    background-color: var(--card-bg);
     padding: 12px 16px;
     text-align: left;
     font-weight: 600;
-    color: #2c3e50;
-    border-bottom: 2px solid #eee;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
 }
 
 .student-table td {
     padding: 12px 16px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
 }
 
 .student-table tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-bg);
 }
 
 /* 空状态样式 */
@@ -394,6 +416,7 @@ header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: var(--text-color);
 }
 
 .leaderboard-item {
@@ -402,6 +425,7 @@ header {
     align-items: center;
     padding: 0.8rem 0;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
 }
 
 .leaderboard-item:last-child {
@@ -416,7 +440,7 @@ header {
 
 .rank {
     font-weight: bold;
-    color: var(--text-light);
+    color: var(--text-secondary);
     width: 20px;
     text-align: center;
 }
@@ -450,13 +474,11 @@ header {
     color: var(--danger-color);
 }
 
-.leaderboard-footer {
-    margin-top: 1rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--border-color);
-    text-align: right;
-    color: var(--text-light);
-    font-size: 0.8rem;
+.leaderboard-update-time {
+    padding: 8px 15px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* 模态框样式 */
@@ -478,7 +500,8 @@ header {
 }
 
 .modal-content {
-    background-color: white;
+    background-color: var(--card-bg);
+    color: var(--text-color);
     border-radius: 8px;
     width: 500px;
     max-width: 95%;
@@ -507,9 +530,13 @@ header {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-light);
+    color: var(--text-secondary);
     padding: 0;
     line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--text-color);
 }
 
 .modal-body {
@@ -541,12 +568,14 @@ header {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     transition: var(--transition);
+    background-color: var(--bg-color);
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    background-color: var(--bg-color);
 }
 
 select.form-control {
@@ -570,7 +599,7 @@ textarea.form-control {
 }
 
 .student-table th, .points-table th {
-    background-color: #f8f9fa;
+    background-color: var(--card-bg);
     padding: 0.8rem;
     text-align: left;
     font-weight: 500;
@@ -588,7 +617,7 @@ textarea.form-control {
 }
 
 .student-table tr:hover, .points-table tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-bg);
 }
 
 /* 操作按钮 */
@@ -643,20 +672,48 @@ textarea.form-control {
 .rule-item {
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem 0;
+    align-items: center;
+    padding: 12px 15px;
     border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+    color: var(--text-color);
 }
 
 .rule-item:last-child {
     border-bottom: none;
 }
 
+.rule-item:hover {
+    background-color: var(--hover-bg);
+}
+
 .rule-name {
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .rule-points {
-    font-weight: bold;
+    font-weight: 500;
+}
+
+.rule-points.positive {
+    color: var(--success-color);
+}
+
+.rule-points.negative {
+    color: var(--danger-color);
+}
+
+.rule-actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.rule-item:hover .rule-actions {
+    opacity: 1;
 }
 
 /* 提示消息 */
@@ -777,8 +834,9 @@ textarea.form-control {
 }
 
 .alert-info {
-    background-color: #e1f0fa;
-    color: #2c5282;
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
 }
 
 .alert i {
@@ -796,6 +854,7 @@ textarea.form-control {
     border: 2px dashed var(--border-color);
     border-radius: 8px;
     margin-bottom: 2rem;
+    background-color: var(--card-bg);
 }
 
 .btn-upload {
@@ -862,13 +921,14 @@ textarea.form-control {
 }
 
 .group-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    border: 1px solid var(--border-color);
 }
 
 .group-header {
@@ -880,7 +940,7 @@ textarea.form-control {
 .group-name {
     font-size: 1.2rem;
     margin: 0;
-    color: var(--dark-color);
+    color: var(--text-color);
 }
 
 .group-actions {
@@ -895,7 +955,7 @@ textarea.form-control {
 }
 
 .group-description {
-    color: var(--text-light);
+    color: var(--text-secondary);
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.4;
@@ -904,7 +964,7 @@ textarea.form-control {
 .group-stats {
     display: flex;
     gap: 15px;
-    color: var(--text-light);
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -928,9 +988,10 @@ textarea.form-control {
     justify-content: space-between;
     align-items: center;
     padding: 5px 10px;
-    background: #f8f9fa;
+    background: var(--hover-bg);
     border-radius: 4px;
     font-size: 0.9rem;
+    color: var(--text-color);
 }
 
 .member-name {
@@ -965,7 +1026,8 @@ textarea.form-control {
     padding: 8px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    background: white;
+    background: var(--card-bg);
+    color: var(--text-color);
 }
 
 .member-select option {
@@ -975,10 +1037,12 @@ textarea.form-control {
     cursor: pointer;
     transition: all 0.2s ease;
     border: 1px solid transparent;
+    color: var(--text-color);
+    background-color: var(--card-bg);
 }
 
 .member-select option:hover {
-    background-color: rgba(52, 152, 219, 0.1);
+    background-color: var(--hover-bg);
     border-color: var(--primary-color);
 }
 
@@ -1037,7 +1101,7 @@ textarea.form-control {
 }
 
 .stats-card {
-    background: white;
+    background: var(--stats-card-bg);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1063,7 +1127,7 @@ textarea.form-control {
 }
 
 .stats-title {
-    color: var(--text-light);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin-bottom: 5px;
 }
@@ -1071,7 +1135,7 @@ textarea.form-control {
 .stats-value {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--dark-color);
+    color: var(--text-color);
 }
 
 .charts-container {
@@ -1082,7 +1146,7 @@ textarea.form-control {
 }
 
 .chart-wrapper {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1090,12 +1154,12 @@ textarea.form-control {
 
 .chart-wrapper h3 {
     margin-bottom: 15px;
-    color: var(--dark-color);
+    color: var(--text-color);
     font-size: 1.1rem;
 }
 
 .data-tables {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1103,7 +1167,7 @@ textarea.form-control {
 
 .data-tables h3 {
     margin-bottom: 15px;
-    color: var(--dark-color);
+    color: var(--text-color);
     font-size: 1.1rem;
 }
 
@@ -1113,21 +1177,22 @@ textarea.form-control {
 }
 
 .data-table th {
-    background: #f8f9fa;
+    background: var(--hover-bg);
     padding: 12px;
     text-align: left;
     font-weight: 500;
-    color: var(--text-light);
+    color: var(--text-secondary);
     border-bottom: 2px solid var(--border-color);
 }
 
 .data-table td {
     padding: 12px;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
 }
 
 .data-table tbody tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-bg);
 }
 
 @media (max-width: 768px) {
@@ -1146,16 +1211,17 @@ textarea.form-control {
 }
 
 .setting-group {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .setting-group h3 {
     font-size: 1.1rem;
-    color: var(--dark-color);
+    color: var(--text-color);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -1171,7 +1237,7 @@ textarea.form-control {
 }
 
 .setting-description {
-    color: var(--text-light);
+    color: var(--text-secondary);
     margin-bottom: 15px;
     font-size: 0.9rem;
 }
@@ -1196,6 +1262,7 @@ textarea.form-control {
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.2s;
+    color: var(--text-color);
 }
 
 .rule-item:last-child {
@@ -1203,7 +1270,7 @@ textarea.form-control {
 }
 
 .rule-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-bg);
 }
 
 .rule-name {
@@ -1236,66 +1303,262 @@ textarea.form-control {
 }
 
 /* 主题设置样式 */
-.theme-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-}
-
-.theme-option input[type="radio"] {
+.theme-options,
+.theme-option input[type="radio"],
+.theme-option label,
+.theme-preview,
+.theme-preview.light,
+.theme-preview.dark,
+.theme-option input[type="radio"]:checked + label .theme-preview,
+.theme-option span {
     display: none;
 }
 
-.theme-option label {
+/* 保持其他设置页面样式 */
+.settings-container {
+    padding: 20px;
+}
+
+.setting-group {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.setting-group h3 {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 20px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 10px;
-    cursor: pointer;
 }
 
-.theme-preview {
-    width: 100%;
-    height: 100px;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    transition: all 0.2s;
-}
-
-.theme-preview.light {
-    background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
-}
-
-.theme-preview.dark {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-}
-
-.theme-option input[type="radio"]:checked + label .theme-preview {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-}
-
-.theme-option span {
+.setting-description {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
     font-size: 0.9rem;
-    color: var(--text-color);
 }
 
-/* 导入导出按钮样式 */
-#exportDataBtn, #importDataBtn {
-    min-width: 120px;
+.setting-actions {
+    display: flex;
+    gap: 10px;
 }
 
-/* 响应式调整 */
 @media (max-width: 768px) {
     .setting-actions {
         flex-direction: column;
     }
-    
     .setting-actions .btn {
         width: 100%;
     }
-    
-    .theme-options {
+}
+
+/* 主题切换按钮样式 */
+.theme-toggle {
+    position: relative;
+    margin-left: auto;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    color: var(--primary-color);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 图表颜色适配 */
+[data-theme="dark"] .chart-wrapper canvas {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* 移除旧的 footer 样式 */
+.leaderboard-footer {
+    display: none;
+}
+
+/* 工具箱页面样式 */
+.toolkit-container {
+    padding: 20px;
+}
+
+.toolkit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tool-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tool-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.tool-content {
+    flex: 1;
+}
+
+.tool-content h3 {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.tool-content p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.tool-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.tool-actions .form-control {
+    max-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .toolkit-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .tool-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .tool-actions .form-control {
+        max-width: 100%;
+    }
+}
+
+/* 随机点名结果样式 */
+.random-pick-result {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.picked-student {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: var(--hover-bg);
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.pick-number {
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.student-name {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.student-id {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 计时器样式 */
+.timer-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+.timer-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+}
+
+.timer-display {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+    font-family: monospace;
+}
+
+.timer-close {
+    padding: 4px;
+    font-size: 0.9rem;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }

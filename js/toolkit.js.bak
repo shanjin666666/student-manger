@@ -1,0 +1,196 @@
+class ToolkitManager {
+    constructor() {
+        this.timer = null;
+        this.timerInterval = null;
+        this.init();
+    }
+
+    init() {
+        // 初始化时绑定所有事件
+        document.addEventListener('DOMContentLoaded', () => {
+            this.bindEvents();
+        });
+    }
+
+    bindEvents() {
+        // 绑定分组按钮事件
+        const startGroupBtn = document.getElementById('startGroupBtn');
+        if (startGroupBtn) {
+            startGroupBtn.addEventListener('click', () => {
+                const groupCount = document.getElementById('groupCount').value;
+                if (!groupCount || groupCount < 2) {
+                    alert('请输入有效的分组数量（至少2组）');
+                    return;
+                }
+                this.randomGroup(parseInt(groupCount));
+            });
+        }
+
+        // 绑定点名按钮事件
+        const startPickBtn = document.getElementById('startPickBtn');
+        if (startPickBtn) {
+            startPickBtn.addEventListener('click', () => {
+                const studentCount = document.getElementById('studentCount').value;
+                if (!studentCount || studentCount < 1) {
+                    alert('请输入有效的选择人数（至少1人）');
+                    return;
+                }
+                this.randomPick(parseInt(studentCount));
+            });
+        }
+
+        // 绑定计时器按钮事件
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        if (startTimerBtn) {
+            startTimerBtn.addEventListener('click', () => {
+                const minutes = document.getElementById('timerMinutes').value;
+                if (!minutes || minutes < 1) {
+                    alert('请输入有效的时间（至少1分钟）');
+                    return;
+                }
+                this.startTimer(parseInt(minutes));
+            });
+        }
+    }
+
+    randomGroup(groupCount) {
+        const students = studentManager.getAllStudents();
+        if (students.length === 0) {
+            alert('当前没有学生数据');
+            return;
+        }
+
+        if (groupCount > students.length) {
+            alert('分组数量不能大于学生总数');
+            return;
+        }
+
+        // 随机打乱学生数组
+        const shuffledStudents = [...students].sort(() => Math.random() - 0.5);
+        
+        // 计算每组的基本人数和余数
+        const baseSize = Math.floor(students.length / groupCount);
+        const remainder = students.length % groupCount;
+
+        // 创建分组
+        let currentIndex = 0;
+        for (let i = 0; i < groupCount; i++) {
+            // 当前组的大小（如果有余数，前面的组多分配一个人）
+            const currentGroupSize = i < remainder ? baseSize + 1 : baseSize;
+            
+            // 获取当前组的学生
+            const groupStudents = shuffledStudents.slice(currentIndex, currentIndex + currentGroupSize);
+            currentIndex += currentGroupSize;
+
+            // 创建新分组
+            const groupName = `第${i + 1}组`;
+            const memberIds = groupStudents.map(student => student.id);
+            
+            // 调用分组管理器创建分组
+            groupManager.createGroup(groupName, memberIds);
+        }
+
+        // 切换到分组管理页面
+        app.loadView('groups');
+    }
+
+    randomPick(count) {
+        const students = studentManager.getAllStudents();
+        if (students.length === 0) {
+            alert('当前没有学生数据');
+            return;
+        }
+
+        if (count > students.length) {
+            alert('选择人数不能大于学生总数');
+            return;
+        }
+
+        // 随机选择学生
+        const shuffled = [...students].sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, count);
+
+        // 创建结果显示对话框
+        const dialog = document.createElement('div');
+        dialog.className = 'pick-result-dialog';
+        dialog.innerHTML = `
+            <div class="pick-result-content">
+                <h3>随机点名结果</h3>
+                <div class="selected-students">
+                    ${selected.map(student => `
+                        <div class="selected-student">
+                            <i class="fas fa-user"></i>
+                            <span>${student.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="btn btn-primary close-btn">关闭</button>
+            </div>
+        `;
+
+        // 添加关闭按钮事件
+        const closeBtn = dialog.querySelector('.close-btn');
+        closeBtn.addEventListener('click', () => {
+            dialog.remove();
+        });
+
+        // 显示对话框
+        document.body.appendChild(dialog);
+
+        // 添加动画效果
+        setTimeout(() => {
+            dialog.classList.add('show');
+        }, 10);
+    }
+
+    startTimer(minutes) {
+        let seconds = minutes * 60;
+        
+        // 创建计时器显示
+        const timerDisplay = document.createElement('div');
+        timerDisplay.className = 'timer-display';
+        timerDisplay.innerHTML = `
+            <div class="timer-content">
+                <span class="timer-time"></span>
+                <button class="btn btn-sm btn-danger close-timer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(timerDisplay);
+
+        // 更新时间显示
+        const updateDisplay = () => {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+            timerDisplay.querySelector('.timer-time').textContent = timeStr;
+        };
+
+        // 开始计时
+        updateDisplay();
+        const timer = setInterval(() => {
+            seconds--;
+            updateDisplay();
+
+            if (seconds <= 0) {
+                clearInterval(timer);
+                // 播放提示音
+                const audio = new Audio('assets/timer-end.mp3');
+                audio.play();
+                // 添加完成动画
+                timerDisplay.classList.add('completed');
+            }
+        }, 1000);
+
+        // 绑定关闭按钮
+        const closeBtn = timerDisplay.querySelector('.close-timer');
+        closeBtn.addEventListener('click', () => {
+            clearInterval(timer);
+            timerDisplay.remove();
+        });
+    }
+}
+
+// 创建全局实例
+const toolkitManager = new ToolkitManager(); 

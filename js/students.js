@@ -85,7 +85,7 @@ class StudentManager {
 
     addStudent(studentData) {
         const student = {
-            id: Date.now().toString(),
+            id: studentData.id || Date.now().toString(),
             name: studentData.name,
             studentId: studentData.studentId || '',
             gender: studentData.gender || '未知',
@@ -414,8 +414,15 @@ class StudentManager {
             return;
         }
 
-        this.importData.forEach(student => {
-            this.addStudent(student);
+        // 为每个学生生成唯一ID
+        const timestamp = Date.now();
+        this.importData.forEach((student, index) => {
+            // 使用时间戳加索引确保ID唯一
+            const uniqueId = (timestamp + index).toString();
+            this.addStudent({
+                ...student,
+                id: uniqueId
+            });
         });
 
         showToast(`成功导入 ${this.importData.length} 名学生`, 'success');

@@ -56,7 +56,7 @@
 
 1. 克隆项目到本地
 ```bash
-git clone [项目地址]
+git clone https://github.com/shanjin666666/student-manger.git
 ```
 
 2. 打开项目
